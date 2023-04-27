@@ -1,0 +1,16 @@
+function [OutPutBits,Feedback] =  MyReceiver(InputSamples, Parameters)
+
+%% frequency synchronization
+[FreqOffset]  =  FreqOffsetEstimate(InputSamples, Parameters.MaxOffset, Parameters.NumOffsets, Parameters.h);
+rxSamplesFreqOffsetCorr = exp(1j*2*pi*Parameters.freqOffset*(0:1:length(InputSamples)-1)) * InputSamples .* exp(-1j*2*pi*FreqOffset*(0:1:length(txSymbolsPulseShaped)-1));
+
+%% time synchronization
+
+%% channel Estimator
+
+%% demodulation
+
+%% decoder
+[encoderBits, Parameters] = ChannelEncoder(b, Parameters);
+
+end

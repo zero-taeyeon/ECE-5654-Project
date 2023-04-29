@@ -3,7 +3,7 @@ function [decodedBits, Parameters] = ChannelDecoder(rxBitsllr, Parameters)
 
 if(Parameters.encoder == "Polar")
     turbodec = comm.TurboDecoder(Parameters.trellis,Parameters.intrlvrIndices,Parameters.numiter);
-    decodedBits = turbodec(-rxBitsllr.');
+    decodedBits = turbodec(-rxBitsllr(1:end - Parameters.numAppendBits));
 elseif(Parameters.encoder == "LDPC")
 % 
 % 

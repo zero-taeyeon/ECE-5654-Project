@@ -22,6 +22,6 @@ dec_mat = 2.^(bitsPerSymbol-1:-1:0);
 
 b_dec = sum(dec_mat .* b_bin,2); % decimal vector
 
-symbols = exp(1i * ((2*pi/numSymbols) * b_dec ));
+symbols = exp(1i * ((2*pi/numSymbols) * b_dec ))*exp(1j*pi/4);
 
 end

@@ -1,56 +1,67 @@
 % This code evaluates the design of your transmitter/receiver
-clear all
+clear; clc; close all
 %%% Parameters that can be changed by the student  %%%%
-Parameters.ChannelType = 'AWGN'; % 'AWGN', 'RAYL', or 'RICE'
-Parameters.fd = 10;              % max Doppler (10 or 100) only used for fading
+Parameters.ChannelType = 'RAYL'; % 'AWGN', 'RAYL', or 'RICE'
+Parameters.fd = 100;              % max Doppler (10 or 100) only used for fading
 Parameters.K = 10;               % Ricean K-factor; only used in Ricean fading
-Parameters.PayloadSize = 100;    % this is completely up to the student
+Parameters.PayloadSize = 50;     % this is completely up to the student
 % This is the number of info bits per packet.
 % The total packet size depends on the
 % overhead included and coding rate.
 
-Parameters.PerfectChannelEst = 'YS';% 'YS' - puts channel info into
+Parameters.PerfectChannelEst = 'NO';% 'YS' - puts channel info into
 % Parameters.Channel
 % 'NO' - channel estimation must be done
-% separately
-% what I added
-Parameters.sps = 4;            % samples for symbol
-Parameters.numTaps = 25;
-Parameters.rolloff   = 0.25;
+%  separately
 
+%%% Parameters that SHOULD NOT bbe changed by the student  %%%%
+Parameters.NumSinusoids = 100;      % used by Channel function
+Parameters.fs = 10e7;               % used by Channel function
+
+% what I added
+
+% Pulse shaping parameters
+Parameters.sps = 4;                 % samples for symbol
+Parameters.numTaps = 10;            % Filter taps
+Parameters.rolloff   = 0.25;        % roll-off factor
+
+% Modulation Parameters
 Parameters.Modtype = 'PSK';         % modulation type
-Parameters.M = 2;                   % modulation level
+Parameters.M = 4;                  % modulation level
 Parameters.pulseShape = 'SqRa';     % pulse shape
+
 % Channel Encoding
 Parameters.encoder = 'Polar';
 Parameters.numiter = 4;
 
-%%% Parameters that SHOULD NOT bbe changed by the student  %%%%
-Parameters.NumSinusoids = 100;      % used by Channel function
-Parameters.fs = 1e7;               % used by Channel function
-
-
-
 %%% Frequency Synchronization
 Parameters.freqOffset = 0.0;                                 % frequency offset
 Parameters.MaxOffset = 0.15;               % maximum frequency offset
-Parameters.NumOffsets= 200;                        % number of offsets
+Parameters.NumOffsets= 400;                        % number of offsets
 
+%%% timing offset params
+maxOffset = 3;
+Parameters.timeOffset = randi([1,maxOffset]);
+
+%%% frame synchronization
 
 % rangen of SNRs to test over
 if Parameters.ChannelType == "AWGN"
     SNRdB = 0:8;
 else
-    SNRdB = 0:9;
+    SNRdB = 8;
 end
 
 % Number of packets to simulate to estimate performance.  You can change
 % this for testing, but for final plots you should set at 100000
-NumPackets = 1000;
-SNRdB = 6;
+NumPackets = 500;
+bit_errors = zeros(length(SNRdB),1);
+correct_bits = zeros(length(SNRdB),1);
+
+
 
 for i=1:length(SNRdB)
-
+    tic
     Parameters.SNR = 10.^(SNRdB(i)/10);
     bit_errors(i) = 0;
     correct_bits(i) = 0;
@@ -62,6 +73,7 @@ for i=1:length(SNRdB)
         [OutputSamples,Parameters] = MyTransmitter(b, Parameters);
 
         [ReceivedSamples, Parameters] = Channel(OutputSamples, Parameters);
+
         %NOTE: ReceivedSamples should have 1 row per Rx antenna and one
         % column per sample.
 
@@ -78,17 +90,28 @@ for i=1:length(SNRdB)
 
     Throughput(i) = correct_bits(i)/(size(ReceivedSamples,2)*Parameters.fs);
 
+    % Display the elapsed time
+    if((i) == 1)
+        toc;
+        elapsed_time = toc;
+        fprintf('Time taken to complete one SNR: %.2f seconds, total time: %.2f seconds\n', elapsed_time,elapsed_time*length(SNRdB));
+    end
 end
 
-% BER plot
-figure
-semilogy(SNRdB, BER)
-xlabel('SNR (dB)')
-ylabel('BER')
-
-% Througput Plot
-figure
-plot(SNRdB, Throughput)
-xlabel('SNR (dB)')
-ylabel('Througput (b/s)')
-
+% % BER plot
+% figure
+% semilogy(SNRdB, BER)
+% grid on;
+% xlabel('SNR (dB)')
+% ylabel('BER')
+% xlim([SNRdB(1) SNRdB(end)])
+% ylim([10^(-4) 1])
+% 
+% % Througput Plot
+% figure
+% plot(SNRdB, Throughput)
+% grid on;
+% xlabel('SNR (dB)')
+% ylabel('Througput (b/s)')
+% xlim([SNRdB(1) SNRdB(end)])
+% %ylim([10^(-4) 1])

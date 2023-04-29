@@ -1,5 +1,16 @@
 % This code evaluates the design of your transmitter/receiver
 clear; clc; close all
+
+set(groot,'defaultLineLineWidth',2);
+set(groot,'defaultLineLineWidth',2);
+set(groot, 'defaultAxesTickLabelInterpreter','latex');
+set(groot, 'defaultLegendInterpreter','latex');
+set(0,'defaultAxesFontSize',12)
+set(groot,'defaultLineMarkersize',8)
+set(groot,'defaultTextInterpreter','latex')
+
+marker = ['*','+','x','|','^','v','>','<','_','.',"square","diamond","pentagram","hexagram",'o'];
+
 %%% Parameters that can be changed by the student  %%%%
 Parameters.ChannelType = 'AWGN'; % 'AWGN', 'RAYL', or 'RICE'
 Parameters.fd = 100;              % max Doppler (10 or 100) only used for fading
@@ -108,7 +119,7 @@ Legend = {'BPSK','QPSK','16QAM','32QAM','64QAM'};
 % BER plot
 figure
 for i = 1:1:5
-    semilogy(SNRdB, BER(:,i))
+    semilogy(SNRdB, BER(:,i),'LineWidth',1.25,'LineStyle','-',Marker=marker(i))
     hold on;
 end
 legend(Legend)
@@ -121,10 +132,10 @@ ylim([10^(-4) 1])
 % Througput Plot
 figure
 for i = 1:1:5
-    plot(SNRdB, Throughput(:,i)/100)
+    plot(SNRdB, Throughput(:,i)/100,'LineWidth',1.25,'LineStyle','-',Marker=marker(i))
     hold on;
 end
-legend(Legend)
+legend(Legend,Location="northwest")
 grid on;
 xlabel('SNR (dB)')
 ylabel('Througput (b/s)')

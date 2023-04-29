@@ -12,8 +12,8 @@ set(groot,'defaultTextInterpreter','latex')
 marker = ['*','+','x','|','^','v','>','<','_','.',"square","diamond","pentagram","hexagram",'o'];
 
 %%% Parameters that can be changed by the student  %%%%
-Parameters.ChannelType = 'AWGN'; % 'AWGN', 'RAYL', or 'RICE'
-Parameters.fd = 100;              % max Doppler (10 or 100) only used for fading
+Parameters.ChannelType = 'RAYL'; % 'AWGN', 'RAYL', or 'RICE'
+Parameters.fd = 100;             % max Doppler (10 or 100) only used for fading
 Parameters.K = 10;               % Ricean K-factor; only used in Ricean fading
 Parameters.PayloadSize = 100;     % this is completely up to the student
 % This is the number of info bits per packet.
@@ -63,7 +63,7 @@ end
 
 % Number of packets to simulate to estimate performance.  You can change
 % this for testing, but for final plots you should set at 100000
-NumPackets = 10;
+NumPackets = 100;
 bit_errors = zeros(length(SNRdB),1);
 correct_bits = zeros(length(SNRdB),1);
 
@@ -132,7 +132,7 @@ ylim([10^(-4) 1])
 % Througput Plot
 figure
 for i = 1:1:5
-    plot(SNRdB, Throughput(:,i)/100,'LineWidth',1.25,'LineStyle','-',Marker=marker(i))
+    plot(SNRdB, Throughput(:,i)/(NumPackets*10),'LineWidth',1.25,'LineStyle','-',Marker=marker(i))
     hold on;
 end
 legend(Legend,Location="northwest")
@@ -141,5 +141,5 @@ xlabel('SNR (dB)')
 ylabel('Througput (b/s)')
 xlim([SNRdB(1) SNRdB(end)])
 %ylim([10^(-4) 1])
-
-save("AWGN_perfect.mat", 'BER', 'Throughput')
+% Please Change
+save("AWGN_YS_SYNC.mat", 'BER', 'Throughput')

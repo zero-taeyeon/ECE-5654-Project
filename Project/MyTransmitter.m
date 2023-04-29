@@ -5,7 +5,7 @@ function [OutputSamples, Parameters] = MyTransmitter(b, Parameters)
 
 %% Modulation
 if Parameters.Modtype == "PSK"
-    [encoderBitsApp,symbols] = MyPSK(encoderBits,Parameters.M); 
+    [encoderBitsApp,symbols] = MyPSK(encoderBits,Parameters.M);
 else
     [encoderBitsApp,symbols] = MyQAM(encoderBits,Parameters.M);
 end
@@ -13,23 +13,23 @@ end
 % Appended Bits
 Parameters.numAppendBits = length(encoderBitsApp)-length(encoderBits);
 
-if(Parameters.ChannelType == 'AWGN')
-txSymbols = symbols;
+if(Parameters.PerfectChannelEst == "YS")
+    txSymbols = symbols;
 else
-%% Pilot Addition
-% Pilot Parameters
-Parameters.NpS  = 21;
-Parameters.pilotLoc = 1:Parameters.NpS:length(symbols);
-Parameters.Np = length(Parameters.pilotLoc);
-[~,Parameters.pilots] = MyPSK(randi([0 1],Parameters.Np*2,1),4);
+    %% Pilot Addition
+    % Pilot Parameters
+    Parameters.NpS  = 11;
+    Parameters.pilotLoc = 1:Parameters.NpS:length(symbols);
+    Parameters.Np = length(Parameters.pilotLoc);
+    [~,Parameters.pilots] = MyPSK(randi([0 1],Parameters.Np*2,1),4);
 
-txSymbols = zeros(length(symbols) + Parameters.Np,1);
-txSymbols(Parameters.pilotLoc) = Parameters.pilots;
-Parameters.symLoc = setdiff(1:length(symbols)+Parameters.Np,Parameters.pilotLoc);
-txSymbols(Parameters.symLoc) = symbols; 
+    txSymbols = zeros(length(symbols) + Parameters.Np,1);
+    txSymbols(Parameters.pilotLoc) = Parameters.pilots;
+    Parameters.symLoc = setdiff(1:length(symbols)+Parameters.Np,Parameters.pilotLoc);
+    txSymbols(Parameters.symLoc) = symbols;
 end
 %% Pulse shaping
-% Assuming sample period is 0.1 micro sec, so sample rate is 10 Msps, 
+% Assuming sample period is 0.1 micro sec, so sample rate is 10 Msps,
 % so *symbol* period is 0.4 micro secs consisting of four samples
 
 if(Parameters.pulseShape == "SQAR")

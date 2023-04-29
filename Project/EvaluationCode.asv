@@ -5,15 +5,15 @@ set(groot,'defaultLineLineWidth',2);
 set(groot,'defaultLineLineWidth',2);
 set(groot, 'defaultAxesTickLabelInterpreter','latex');
 set(groot, 'defaultLegendInterpreter','latex');
-set(0,'defaultAxesFontSize',14)
-set(groot,'defaultLineMarkersize',10)
+set(0,'defaultAxesFontSize',12)
+set(groot,'defaultLineMarkersize',8)
 set(groot,'defaultTextInterpreter','latex')
 
 marker = ['*','+','x','|','^','v','>','<','_','.',"square","diamond","pentagram","hexagram",'o'];
 
 %%% Parameters that can be changed by the student  %%%%
-Parameters.ChannelType = 'AWGN'; % 'AWGN', 'RAYL', or 'RICE'
-Parameters.fd = 100;              % max Doppler (10 or 100) only used for fading
+Parameters.ChannelType = 'RAYL'; % 'AWGN', 'RAYL', or 'RICE'
+Parameters.fd = 100;             % max Doppler (10 or 100) only used for fading
 Parameters.K = 10;               % Ricean K-factor; only used in Ricean fading
 Parameters.PayloadSize = 100;     % this is completely up to the student
 % This is the number of info bits per packet.
@@ -63,7 +63,7 @@ end
 
 % Number of packets to simulate to estimate performance.  You can change
 % this for testing, but for final plots you should set at 100000
-NumPackets = 10;
+NumPackets = 100;
 bit_errors = zeros(length(SNRdB),1);
 correct_bits = zeros(length(SNRdB),1);
 
@@ -119,7 +119,7 @@ Legend = {'BPSK','QPSK','16QAM','32QAM','64QAM'};
 % BER plot
 figure
 for i = 1:1:5
-    semilogy(SNRdB, BER(:,i),'LineStyle','-',Marker=marker(i))
+    semilogy(SNRdB, BER(:,i),'LineWidth',1.25,'LineStyle','-',Marker=marker(i))
     hold on;
 end
 legend(Legend)
@@ -128,14 +128,14 @@ xlabel('SNR (dB)')
 ylabel('BER')
 xlim([SNRdB(1) SNRdB(end)])
 ylim([10^(-4) 1])
-
+title()
 % Througput Plot
 figure
 for i = 1:1:5
-    plot(SNRdB, Throughput(:,i)/100)
+    plot(SNRdB, Throughput(:,i)/(NumPackets*10),'LineWidth',1.25,'LineStyle','-',Marker=marker(i))
     hold on;
 end
-legend(Legend)
+legend(Legend,Location="northwest")
 grid on;
 xlabel('SNR (dB)')
 ylabel('Througput (b/s)')

@@ -4,7 +4,7 @@ function [OutPutBits,Feedback] =  MyReceiver(InputSamples, Parameters)
 
 %% frequency synchronization
 [FreqOffset]  =  FreqOffsetEstimate(InputSamples, Parameters.MaxOffset, Parameters.NumOffsets, Parameters.h);
-rxSigFreqCorr =  InputSamples .* exp(-1j*2*pi*FreqOffset*(0:1:length(InputSamples)-1));
+rxSigFreqCorr =  InputSamples .* exp(-1j*2*pi*0*(0:1:length(InputSamples)-1));
 
 %% time synchronization
 %[tau] = SymbolTimingEstimate(rxSigFreqCorr, Parameters);

@@ -68,7 +68,7 @@ OutputSamples = Parameters.Channel.*InputSamples + ...
 % OutputSamples = Parameters.Channel.*InputSamples;
 
 % Frequency offset addition
-OutputSamples = exp(1j*2*pi*Parameters.freqOffset*(0:1:length(OutputSamples)-1)) .* OutputSamples;
+% OutputSamples = exp(1j*2*pi*Parameters.freqOffset*(0:1:length(OutputSamples)-1)) .* OutputSamples;
 %OutputSamples = exp(1j*2*pi*Parameters.freqOffset*t) .* OutputSamples;
 
 % Time offset addition
